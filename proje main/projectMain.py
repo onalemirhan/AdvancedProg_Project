@@ -6,11 +6,9 @@ from mtcnn import MTCNN
 from tensorflow.keras.models import load_model
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 
-# Model ve yüz dedektörü yükleniyor
-model = load_model("mobilenetv2_model.h5")  # Model yolunu kendine göre ayarla
+model = load_model("mobilenetv2_model.h5")  
 detector = MTCNN()
 
-# Görüntü işleme fonksiyonu
 def process_frame(frame):
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     faces = detector.detect_faces(rgb_frame)
@@ -31,14 +29,14 @@ def process_frame(frame):
         class_index = np.argmax(prediction)
         class_names = ["Incorrect", "With Mask", "Without Mask"]
         label = class_names[class_index]
-        confidence = prediction[class_index] * 100  # yüzde olarak
+        confidence = prediction[class_index] * 100 
 
         if label == "Incorrect":
-            box_color = (255, 0, 0)  # Mavi
+            box_color = (255, 0, 0)  
         elif label == "With Mask":
-            box_color = (0, 255, 0)  # Yeşil
-        else:  # Without Mask
-            box_color = (0, 0, 255)  # Kırmızı
+            box_color = (0, 255, 0)  
+        else:  
+            box_color = (0, 0, 255)  
 
         text = f"{label} {confidence:.1f}%"
         cv2.rectangle(frame, (x, y), (x+width, y+height), box_color, 2)
@@ -47,9 +45,6 @@ def process_frame(frame):
 
     return frame
 
-
-
-# Dosyadan görüntü seçip işleyen fonksiyon
 def select_image():
     file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg *.jpeg *.png")])
     if file_path:
@@ -59,7 +54,6 @@ def select_image():
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-# Kameradan görüntü alan fonksiyon
 def open_camera():
     cap = cv2.VideoCapture(0)
     while True:
@@ -81,7 +75,6 @@ def open_camera():
     cap.release()
     cv2.destroyAllWindows()
 
-# GUI
 ctk.set_appearance_mode("light")
 ctk.set_default_color_theme("blue")
 
